@@ -187,17 +187,17 @@
             
             <div class="form-row">
                 <label>Nombre completo</label>
-                <input type="text" id="nombreCompleto" enterkeyhint="next" placeholder="Ej: Marlene Encina Vega" required>
+                <input type="text" id="nombreCompleto" enterkeyhint="next" placeholder="Ej: Marlene Encina Vega">
             </div>
 
             <div class="form-row">
                 <label>Empresa o emprendimiento</label>
-                <input type="text" id="empresaEmprendimiento" enterkeyhint="next" placeholder="Ej: Venta Humus y Lombrices" required>
+                <input type="text" id="empresaEmprendimiento" enterkeyhint="next" placeholder="Ej: Venta Humus y Lombrices">
             </div>
 
             <div class="form-row">
                 <label>Cargo o función</label>
-                <input type="text" id="cargoFuncion" enterkeyhint="next" placeholder="Ej: Productora y Comercializadora" required>
+                <input type="text" id="cargoFuncion" enterkeyhint="next" placeholder="Ej: Productora y Comercializadora">
             </div>
 
             <div class="form-row">
@@ -212,27 +212,27 @@
 
             <div class="form-row">
                 <label>Ciudad</label>
-                <input type="text" id="ciudad" enterkeyhint="next" placeholder="Ej: Chillán" required>
+                <input type="text" id="ciudad" enterkeyhint="next" placeholder="Ej: Chillán">
             </div>
 
             <div class="form-row">
                 <label>Número celular (sin +56)</label>
-                <input type="tel" id="celular" enterkeyhint="next" placeholder="Ej: 995797206" required>
+                <input type="tel" id="celular" enterkeyhint="next" placeholder="Ej: 995797206">
             </div>
 
             <div class="form-row">
                 <label>Correo electrónico</label>
-                <input type="email" id="correo" enterkeyhint="next" placeholder="Ej: marleneencina@hotmail.com" required>
+                <input type="email" id="correo" enterkeyhint="next" placeholder="Ej: marleneencina@hotmail.com">
             </div>
 
             <div class="form-row">
                 <label>Página web</label>
-                <input type="url" id="paginaWeb" enterkeyhint="next" placeholder="Ej: https://humuschillan.cl (Opcional)">
+                <input type="text" id="paginaWeb" enterkeyhint="next" placeholder="Ej: https://humuschillan.cl (Opcional)">
             </div>
 
             <div class="form-row">
                 <label>Red social principal</label>
-                <input type="url" id="redSocial" enterkeyhint="done" placeholder="Ej: https://facebook.com/pagina" required>
+                <input type="text" id="redSocial" enterkeyhint="done" placeholder="Ej: https://facebook.com/pagina">
             </div>
 
             <button type="submit" id="submit-btn" class="submit-btn">📩 Enviar para elaborar tarjeta</button>
@@ -323,31 +323,27 @@
 
         const jsonString = JSON.stringify(clientData, null, 2);
 
-        const formData = {
-            _subject: `Nueva Tarjeta Digital: ${nombreCompleto || 'Cliente'} (${jsonFileName})`,
-            _template: "table",
-            "Nombre Completo": nombreCompleto,
-            "Empresa o Emprendimiento": empresaEmprendimiento,
-            "Cargo o Función": cargoFuncion,
-            "Título Profesional u Oficio": tituloOficio,
-            "Dirección Completa": direccion,
-            "Ciudad": ciudad,
-            "Número Celular": celularFormateado,
-            "Correo Electrónico": correo,
-            "Página Web": paginaWeb,
-            "Red Social Principal": redSocial,
-            "Nombre del Archivo JSON": jsonFileName,
-            "Estructura JSON Completa": jsonString
-        };
+        // Uso de FormData nativo para evitar bloqueos CORS de GitHub a FormSubmit
+        const payload = new FormData();
+        payload.append("_subject", `Nueva Tarjeta Digital: ${nombreCompleto || 'Cliente'} (${jsonFileName})`);
+        payload.append("_template", "table");
+        payload.append("Nombre Completo", nombreCompleto);
+        payload.append("Empresa o Emprendimiento", empresaEmprendimiento);
+        payload.append("Cargo o Función", cargoFuncion);
+        payload.append("Título Profesional u Oficio", tituloOficio);
+        payload.append("Dirección Completa", direccion);
+        payload.append("Ciudad", ciudad);
+        payload.append("Número Celular", celularFormateado);
+        payload.append("Correo Electrónico", correo);
+        payload.append("Página Web", paginaWeb);
+        payload.append("Red Social Principal", redSocial);
+        payload.append("Nombre del Archivo JSON", jsonFileName);
+        payload.append("Estructura JSON Completa", jsonString);
 
         try {
             const response = await fetch("https://formsubmit.co/ajax/el/heboji", {
                 method: "POST",
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(formData)
+                body: payload
             });
 
             if (response.ok) {
