@@ -143,35 +143,6 @@
         .submit-btn:hover {
             background: var(--accent-hover);
         }
-
-        .submit-btn:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-        }
-
-        .success-container {
-            display: none;
-            padding: 35px 20px;
-            text-align: center;
-        }
-
-        .success-icon {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-        }
-
-        .success-title {
-            color: var(--heading);
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
-        .success-text {
-            font-size: 0.88rem;
-            color: var(--muted);
-            line-height: 1.5;
-        }
     </style>
 </head>
 <body>
@@ -182,76 +153,89 @@
         <div class="app-subtitle">Ingresa tus datos para elaborar tu tarjeta</div>
     </div>
 
-    <div class="form-container" id="form-block">
-        <form id="data-form" onsubmit="processSubmission(event)">
+    <div class="form-container">
+        <!-- Envío directo a FormSubmit mediante endpoint verificado -->
+        <form action="https://formsubmit.co/el/heboji" method="POST">
             
+            <!-- Configuraciones ocultas de FormSubmit -->
+            <input type="hidden" name="_subject" value="Nueva Solicitud de Tarjeta Digital">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_next" value="https://williamsneira-dot.github.io/solicitud-tarjeta/?enviado=exito">
+
             <div class="form-row">
                 <label>Nombre completo</label>
-                <input type="text" id="nombreCompleto" enterkeyhint="next" placeholder="Ej: Marlene Encina Vega">
+                <input type="text" name="Nombre Completo" enterkeyhint="next" placeholder="Ej: Marlene Encina Vega" required>
             </div>
 
             <div class="form-row">
                 <label>Empresa o emprendimiento</label>
-                <input type="text" id="empresaEmprendimiento" enterkeyhint="next" placeholder="Ej: Venta Humus y Lombrices">
+                <input type="text" name="Empresa o Emprendimiento" enterkeyhint="next" placeholder="Ej: Venta Humus y Lombrices" required>
             </div>
 
             <div class="form-row">
                 <label>Cargo o función</label>
-                <input type="text" id="cargoFuncion" enterkeyhint="next" placeholder="Ej: Productora y Comercializadora">
+                <input type="text" name="Cargo o Función" enterkeyhint="next" placeholder="Ej: Productora y Comercializadora" required>
             </div>
 
             <div class="form-row">
                 <label>Título profesional u oficio</label>
-                <input type="text" id="tituloOficio" enterkeyhint="next" placeholder="Ej: Técnica Agrícola, Mueblista, Fletes">
+                <input type="text" name="Título Profesional u Oficio" enterkeyhint="next" placeholder="Ej: Técnica Agrícola, Mueblista, Fletes">
             </div>
 
             <div class="form-row">
                 <label>Dirección completa</label>
-                <input type="text" id="direccion" enterkeyhint="next" placeholder="Ej: Pasaje Los Aromas 450 (Opcional)">
+                <input type="text" name="Dirección Completa" enterkeyhint="next" placeholder="Ej: Pasaje Los Aromas 450 (Opcional)">
             </div>
 
             <div class="form-row">
                 <label>Ciudad</label>
-                <input type="text" id="ciudad" enterkeyhint="next" placeholder="Ej: Chillán">
+                <input type="text" name="Ciudad" enterkeyhint="next" placeholder="Ej: Chillán" required>
             </div>
 
             <div class="form-row">
                 <label>Número celular (sin +56)</label>
-                <input type="tel" id="celular" enterkeyhint="next" placeholder="Ej: 995797206">
+                <input type="tel" name="Número Celular" enterkeyhint="next" placeholder="Ej: 995797206" required>
             </div>
 
             <div class="form-row">
                 <label>Correo electrónico</label>
-                <input type="email" id="correo" enterkeyhint="next" placeholder="Ej: marleneencina@hotmail.com">
+                <input type="email" name="Correo Electrónico" enterkeyhint="next" placeholder="Ej: marleneencina@hotmail.com" required>
             </div>
 
             <div class="form-row">
                 <label>Página web</label>
-                <input type="text" id="paginaWeb" enterkeyhint="next" placeholder="Ej: https://humuschillan.cl (Opcional)">
+                <input type="text" name="Página Web" enterkeyhint="next" placeholder="Ej: https://humuschillan.cl (Opcional)">
             </div>
 
             <div class="form-row">
                 <label>Red social principal</label>
-                <input type="text" id="redSocial" enterkeyhint="done" placeholder="Ej: https://facebook.com/pagina">
+                <input type="text" name="Red Social Principal" enterkeyhint="done" placeholder="Ej: https://facebook.com/pagina" required>
             </div>
 
-            <button type="submit" id="submit-btn" class="submit-btn">📩 Enviar para elaborar tarjeta</button>
+            <button type="submit" class="submit-btn">📩 Enviar para elaborar tarjeta</button>
         </form>
-    </div>
-
-    <div class="success-container" id="success-block">
-        <div class="success-icon">✅</div>
-        <div class="success-title">¡Información enviada con éxito!</div>
-        <p class="success-text">
-            Hemos recibido tus datos correctamente.<br>
-            Nos pondremos en contacto contigo para la entrega de tu tarjeta digital.
-        </p>
     </div>
 </div>
 
 <script>
-    const formInputs = document.querySelectorAll('#data-form input');
-    
+    // Mostrar mensaje de éxito si la URL contiene el parámetro de redirección
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('enviado') === 'exito') {
+        document.querySelector('.wrapper').innerHTML = `
+            <div style="padding: 40px 20px; text-align: center;">
+                <div style="font-size: 3rem; margin-bottom: 10px;">✅</div>
+                <h2 style="color: #0f172a; font-size: 1.2rem; margin-bottom: 8px;">¡Información enviada con éxito!</h2>
+                <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5;">
+                    Hemos recibido tus datos correctamente.<br>
+                    Nos pondremos en contacto contigo a la brevedad.
+                </p>
+            </div>
+        `;
+    }
+
+    // Navegación secuencial con la tecla Enter
+    const formInputs = document.querySelectorAll('form input');
     formInputs.forEach((input, index) => {
         input.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
@@ -259,108 +243,11 @@
                 if (index < formInputs.length - 1) {
                     formInputs[index + 1].focus();
                 } else {
-                    document.getElementById('submit-btn').click();
+                    document.querySelector('button[type="submit"]').click();
                 }
             }
         });
     });
-
-    async function processSubmission(event) {
-        event.preventDefault();
-
-        const submitBtn = document.getElementById('submit-btn');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-
-        const nombreCompleto = document.getElementById('nombreCompleto').value.trim();
-        const empresaEmprendimiento = document.getElementById('empresaEmprendimiento').value.trim();
-        const cargoFuncion = document.getElementById('cargoFuncion').value.trim();
-        const tituloOficio = document.getElementById('tituloOficio').value.trim();
-        const direccion = document.getElementById('direccion').value.trim();
-        const ciudad = document.getElementById('ciudad').value.trim();
-        const celularRaw = document.getElementById('celular').value.trim().replace(/\s+/g, '');
-        const correo = document.getElementById('correo').value.trim();
-        const paginaWeb = document.getElementById('paginaWeb').value.trim();
-        const redSocial = document.getElementById('redSocial').value.trim();
-
-        const celularFormateado = celularRaw ? (celularRaw.startsWith('+56') ? celularRaw : `+56${celularRaw}`) : '';
-
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        
-        const timestamp = `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
-        const cleanName = (nombreCompleto ? nombreCompleto : 'cliente').replace(/[^a-zA-Z0-9_]/g, '_');
-        const jsonFileName = `${cleanName}_${timestamp}.json`;
-
-        const expiration = new Date();
-        expiration.setFullYear(year + 2);
-
-        const clientData = {
-            archivo: jsonFileName,
-            cliente: {
-                nombreCompleto,
-                empresaEmprendimiento,
-                cargoFuncion,
-                tituloOficio,
-                direccion,
-                ciudad,
-                celular: celularFormateado,
-                correo,
-                paginaWeb,
-                redSocial
-            },
-            servicio: {
-                vigenciaDesde: `${year}-${month}-${day}`,
-                vigenciaHasta: expiration.toISOString().split('T')[0],
-                duracionAnos: 2
-            }
-        };
-
-        const jsonString = JSON.stringify(clientData, null, 2);
-
-        // Uso de FormData nativo para evitar bloqueos CORS de GitHub a FormSubmit
-        const payload = new FormData();
-        payload.append("_subject", `Nueva Tarjeta Digital: ${nombreCompleto || 'Cliente'} (${jsonFileName})`);
-        payload.append("_template", "table");
-        payload.append("Nombre Completo", nombreCompleto);
-        payload.append("Empresa o Emprendimiento", empresaEmprendimiento);
-        payload.append("Cargo o Función", cargoFuncion);
-        payload.append("Título Profesional u Oficio", tituloOficio);
-        payload.append("Dirección Completa", direccion);
-        payload.append("Ciudad", ciudad);
-        payload.append("Número Celular", celularFormateado);
-        payload.append("Correo Electrónico", correo);
-        payload.append("Página Web", paginaWeb);
-        payload.append("Red Social Principal", redSocial);
-        payload.append("Nombre del Archivo JSON", jsonFileName);
-        payload.append("Estructura JSON Completa", jsonString);
-
-        try {
-            const response = await fetch("https://formsubmit.co/ajax/el/heboji", {
-                method: "POST",
-                body: payload
-            });
-
-            if (response.ok) {
-                document.getElementById('form-block').style.display = 'none';
-                document.getElementById('success-block').style.display = 'block';
-            } else {
-                alert('Hubo un problema al enviar la información. Por favor, inténtalo de nuevo.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = '📩 Enviar para elaborar tarjeta';
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Error de conexión. Por favor, verifica tu red e inténtalo de nuevo.');
-            submitBtn.disabled = false;
-            submitBtn.textContent = '📩 Enviar para elaborar tarjeta';
-        }
-    }
 </script>
 
 </body>
